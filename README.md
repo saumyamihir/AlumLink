@@ -1,36 +1,71 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# AlumLink
 
-## Getting Started
+AlumLink is a mentorship platform built with Next.js App Router, React, Tailwind CSS, MongoDB, and Mongoose. Students can discover verified alumni mentors, send requests, manage mentorships, schedule sessions, and track goals. Alumni can submit verification details and manage mentoring activity. Administrators can review alumni and monitor users and engagement.
 
-First, run the development server:
+## Requirements
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- Node.js 20.9 or later
+- npm
+- A running local MongoDB instance, or a MongoDB Atlas cluster
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Local setup
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+1. Install dependencies:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+   ```bash
+   npm install
+   ```
 
-## Learn More
+2. Copy `.env.example` to `.env.local`. The default URI uses a local MongoDB server on port `27017`:
 
-To learn more about Next.js, take a look at the following resources:
+   ```env
+   MONGODB_URI=mongodb://127.0.0.1:27017/alumlink
+   SESSION_SECRET=<a-random-secret-at-least-32-characters-long>
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+   The database name is `alumlink`. If using Atlas instead, replace the URI with your Atlas connection string. Do not commit `.env.local` or real credentials.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+3. Optionally add the development demo accounts and sample mentorship data:
 
-## Deploy on Vercel
+   ```bash
+   npm run seed
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+   The seed script is idempotent and does not clear collections. Demo login credentials:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+   - Admin: `admin@alumlink.demo` / `Demo@123`
+   - Student: `student1@alumlink.demo` / `Demo@123`
+   - Alumni: `alumni1@alumlink.demo` / `Demo@123`
+
+   These credentials are for local testing only. Never deploy the demo accounts or password as production credentials.
+
+4. Start the development server:
+
+   ```bash
+   npm run dev
+   ```
+
+   Visit [http://localhost:3000](http://localhost:3000).
+
+## Scripts
+
+- `npm run dev` — Start the development server
+- `npm run lint` — Run ESLint
+- `npm run build` — Create a production build
+- `npm run start` — Serve the production build
+- `npm run seed` — Add or update the clearly named demo records
+
+## Application areas
+
+- Public landing and about pages
+- Persistent light/dark mode and selectable accent-color palette
+- Student dashboard, profiles, mentor discovery and match explanations, requests, mentorships, sessions, goals, and feedback
+- Alumni profile, verification submission, availability, requests, students, and sessions
+- Admin dashboard, alumni verification, user management, mentorship monitoring, and analytics
+- REST-style API handlers under `src/app/api`
+
+Mentor discovery only returns active, verified alumni with capacity. Match scores use the weighted profile fields defined in `src/lib/matching.js`; demo records are sample data and landing-page visuals are illustrative, not live platform statistics. Use the sun/moon control to change light/dark mode and the palette control to choose a saved accent color.
+
+## Deployment
+
+Deploy to a Node.js host that supports Next.js. Configure `MONGODB_URI` and a unique, random `SESSION_SECRET` of at least 32 characters as deployment secrets. Restrict MongoDB network access to the deployment environment, use production-grade credentials, and do not run the demo seed script against production data.
